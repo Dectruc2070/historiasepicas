@@ -2,65 +2,47 @@
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Calibri, sans-serif;
     height: 100%;
-    background-color: #121212;
+    font-family: Calibri, sans-serif;
+    background-color: #1b1b1b;
     color: white;
 }
 
-.editor-bg {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-.menu-editor {
-    background: #1f1f1f;
+.toolbar {
+    background: #222;
     padding: 0.5rem;
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
+    border-bottom: 2px solid #444;
     justify-content: center;
-    border-bottom: 1px solid #444;
 }
 
-.menu-editor button {
-    padding: 0.4rem 1rem;
+.toolbar button, .toolbar select, .toolbar input[type=color], .toolbar input[type=file] {
     background: #333;
     color: white;
     border: 1px solid #555;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 4px;
 }
 
-.menu-editor button:hover {
-    background: #555;
-}
-
-.zona-edicion {
+.editor-container {
     display: flex;
-    height: 100%;
+    height: calc(100vh - 50px);
 }
 
-#zona-negra {
-    flex: 1;
-    position: relative;
-    background-color: #000;
-    overflow: auto;
-}
-
-#cuadro-gris {
-    width: 40%;
-    background-color: #444;
+.columna-negra {
+    width: 20%;
+    background: #000;
     padding: 1rem;
     overflow-y: auto;
-    border-left: 2px solid #222;
-    outline: none;
 }
 
-.libre {
-    padding: 5px;
-    background: rgba(255,255,255,0.1);
-    border: 1px dashed #999;
-    border-radius: 6px;
-    cursor: move;
+.zona-central {
+    flex: 1;
+    background: #f0f0f0;
+    color: black;
+    padding: 1rem;
+    overflow-y: auto;
+    outline: none;
 }
