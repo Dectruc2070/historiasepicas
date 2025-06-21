@@ -19,17 +19,30 @@ function abrirArchivo(event) {
     reader.readAsText(file);
 }
 
+function crearElementoEditable(html) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "elemento-editable";
+    wrapper.innerHTML = html;
+
+    wrapper.setAttribute("draggable", "true");
+
+    wrapper.addEventListener("dragstart", function(e) {
+        e.dataTransfer.setData("text/plain", null);
+        wrapper.classList.add("drag");
+    });
+
+    wrapper.addEventListener("dragend", function(e) {
+        wrapper.style.left = e.pageX - 50 + "px";
+        wrapper.style.top = e.pageY - 50 + "px";
+        wrapper.style.position = "absolute";
+        wrapper.classList.remove("drag");
+    });
+
+    return wrapper;
+}
+
 function insertarFigura() {
-    const figura = document.createElement("div");
-    figura.style.width = "60px";
-    figura.style.height = "60px";
-    figura.style.background = "yellow";
-    figura.style.border = "2px solid black";
-    figura.style.margin = "10px";
-    figura.innerText = "▲";
-    figura.style.textAlign = "center";
-    figura.style.lineHeight = "60px";
-    figura.style.color = "black";
+    const figura = crearElementoEditable('<div style="width:60px; height:60px; background:yellow; color:black; text-align:center; line-height:60px;">▲</div>');
     document.getElementById("columna-izquierda").appendChild(figura);
 }
 
@@ -41,10 +54,9 @@ function insertarImagen() {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = function(ev) {
-            const img = document.createElement("img");
-            img.src = ev.target.result;
-            img.style.maxWidth = "100%";
-            document.getElementById("columna-derecha").appendChild(img);
+            const html = `<img src="${ev.target.result}" style="max-width:100%;">`;
+            const imgElem = crearElementoEditable(html);
+            document.getElementById("columna-derecha").appendChild(imgElem);
         };
         reader.readAsDataURL(file);
     };
@@ -59,10 +71,9 @@ function insertarAudio() {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = function(ev) {
-            const audio = document.createElement("audio");
-            audio.controls = true;
-            audio.src = ev.target.result;
-            document.getElementById("columna-izquierda").appendChild(audio);
+            const html = `<audio controls src="${ev.target.result}"></audio>`;
+            const audioElem = crearElementoEditable(html);
+            document.getElementById("columna-izquierda").appendChild(audioElem);
         };
         reader.readAsDataURL(file);
     };
@@ -77,11 +88,9 @@ function insertarVideo() {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = function(ev) {
-            const video = document.createElement("video");
-            video.controls = true;
-            video.src = ev.target.result;
-            video.style.maxWidth = "100%";
-            document.getElementById("columna-derecha").appendChild(video);
+            const html = `<video controls src="${ev.target.result}" style="width:100%;"></video>`;
+            const videoElem = crearElementoEditable(html);
+            document.getElementById("columna-derecha").appendChild(videoElem);
         };
         reader.readAsDataURL(file);
     };
