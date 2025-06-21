@@ -3,20 +3,20 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editor Avanzado</title>
+    <title>Editor Completo</title>
     <link rel="stylesheet" href="style.css">
     <script defer src="editor.js"></script>
 </head>
-<body class="editor-layout">
+<body>
     <div class="toolbar">
-        <select id="fuente">
+        <select id="fuente" onchange="cambiarFuente()">
             <option value="Calibri">Calibri</option>
             <option value="Times New Roman">Times New Roman</option>
             <option value="Arial">Arial</option>
             <option value="Verdana">Verdana</option>
             <option value="Courier New">Courier New</option>
         </select>
-        <select id="tamano">
+        <select id="tamano" onchange="cambiarTamano()">
             <option value="14px">14px</option>
             <option value="18px">18px</option>
             <option value="24px">24px</option>
@@ -26,19 +26,14 @@
         <button onclick="formato('italic')">Cursiva</button>
         <button onclick="formato('underline')">Subrayado</button>
         <input type="color" id="color" onchange="cambiarColor()">
-        <input type="file" accept=".txt,.docx,.doc" onchange="abrirArchivo(event)">
-        <button onclick="insertarFigura()">Figura</button>
-        <button onclick="insertarImagen()">Imagen</button>
-        <button onclick="insertarAudio()">Audio</button>
-        <button onclick="insertarVideo()">Video</button>
+        <input type="file" accept=".txt" onchange="abrirArchivo(event)">
+        <button onclick="insertar('figura')">Figura</button>
+        <button onclick="insertar('imagen')">Imagen</button>
+        <button onclick="insertar('audio')">Audio</button>
+        <button onclick="insertar('video')">Video</button>
     </div>
-
-    <div class="editor-container">
-        <div id="columna-izquierda" class="columna-negra"></div>
-        <div id="zona-texto" contenteditable="true" class="zona-central">
-            Escribe aquí tu historia o abre un archivo para cargar contenido.
-        </div>
-        <div id="columna-derecha" class="columna-negra"></div>
+    <div id="lienzo" contenteditable="true">
+        Escribe aquí tu historia, o inserta imágenes, videos, figuras y más. Todo se puede mover y redimensionar.
     </div>
 </body>
 </html>
