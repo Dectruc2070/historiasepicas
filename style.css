@@ -1,0 +1,80 @@
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.vista-bg {
+    background: url('fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    width: 90%;
+    max-width: 700px;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12px);
+    color: white;
+    text-align: center;
+}
+
+.glass-panel h1 {
+    margin-bottom: 1rem;
+}
+
+.menu a, .menu button {
+    display: block;
+    margin: 0.5rem 0;
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.menu a:hover, .menu button:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.login-hidden {
+    display: none;
+    margin-top: 1rem;
+}
+
+input {
+    margin: 0.3rem 0;
+    padding: 0.5rem;
+    width: 80%;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    background-color: #2255aa;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    cursor: pointer;
+}
+
+.error {
+    color: #ffbbbb;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
