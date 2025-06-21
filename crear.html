@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Historia</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="editor.js"></script>
+</head>
+<body class="editor-bg">
+    <div class="menu-editor">
+        <button onclick="agregarTexto()">Texto</button>
+        <button onclick="agregarImagen()">Imagen</button>
+        <button onclick="agregarAudio()">Audio</button>
+        <button onclick="agregarVideo()">Video</button>
+        <button onclick="agregarFigura()">Figura</button>
+        <button onclick="abrirHistoria()">Abrir historia escrita</button>
+    </div>
+    <div class="zona-edicion">
+        <div id="zona-negra">
+            <!-- Aquí se colocan los elementos libres -->
+        </div>
+        <div id="cuadro-gris" contenteditable="true">
+            Aquí va el texto de la historia o el texto abierto desde archivo.
+        </div>
+    </div>
+</body>
+</html>
