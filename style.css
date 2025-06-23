@@ -8,10 +8,28 @@ body, html {
   height: 100%;
 }
 
+.toolbar {
+  background: #222;
+  padding: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 2px solid #444;
+  justify-content: center;
+}
+
+.toolbar button, .toolbar select, .toolbar input[type=color], .toolbar input[type=file] {
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 0.4rem;
+  border-radius: 4px;
+}
+
 .contenedor-editor {
   display: flex;
-  min-height: 100vh;
   align-items: flex-start;
+  width: 100%;
 }
 
 .columna {
@@ -35,4 +53,16 @@ body, html {
 .separador {
   width: 2px;
   background-color: #888;
+}
+
+.elemento-editable {
+  position: relative;
+  resize: both;
+  overflow: auto;
+  border: 2px dashed transparent;
+  margin: 1rem 0;
+}
+
+.elemento-editable.selected {
+  border-color: #00f;
 }
