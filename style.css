@@ -31,6 +31,7 @@ body, html {
   align-items: flex-start;
   width: 100%;
   min-height: 100vh;
+  position: relative;
 }
 
 .columna {
@@ -61,9 +62,12 @@ body, html {
   resize: both;
   overflow: auto;
   border: 2px dashed transparent;
+  padding: 5px;
   z-index: 10;
+  background-color: white;
 }
 
 .elemento-editable.selected {
   border-color: #00f;
 }
+
