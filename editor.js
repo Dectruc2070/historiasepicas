@@ -1,4 +1,7 @@
 
+let elementoSeleccionado = null;
+
+// Botones de formato
 function formato(comando) {
   document.execCommand(comando, false, null);
 }
@@ -25,6 +28,7 @@ function cambiarColor() {
   document.execCommand("foreColor", false, color);
 }
 
+// Abrir archivo .txt
 function abrirArchivo(event) {
   const file = event.target.files[0];
   if (!file || !file.name.endsWith(".txt")) {
@@ -38,6 +42,7 @@ function abrirArchivo(event) {
   reader.readAsText(file);
 }
 
+// Insertar elementos
 function insertar(tipo) {
   const input = document.createElement("input");
   input.type = "file";
@@ -58,7 +63,7 @@ function insertar(tipo) {
       contenedor.className = "elemento-editable";
       contenedor.innerHTML = html;
       contenedor.contentEditable = false;
-      contenedor.style.left = "80px";
+      contenedor.style.left = "100px";
       contenedor.style.top = "300px";
 
       hacerMovible(contenedor);
@@ -66,7 +71,6 @@ function insertar(tipo) {
     };
 
     if (tipo === "figura") {
-      // Crear óvalo con texto editable
       const ovalo = document.createElement("div");
       ovalo.className = "elemento-editable";
       ovalo.contentEditable = true;
@@ -92,9 +96,12 @@ function insertar(tipo) {
   input.click();
 }
 
+// Hacer movible
 function hacerMovible(elemento) {
+  elemento.classList.add("elemento-editable");
   elemento.onmousedown = function(e) {
-    elemento.classList.add("selected");
+    if (e.button === 2) return; // no mover con clic derecho
+    elementoSeleccionado = elemento;
     let shiftX = e.clientX - elemento.getBoundingClientRect().left;
     let shiftY = e.clientY - elemento.getBoundingClientRect().top;
 
@@ -112,8 +119,91 @@ function hacerMovible(elemento) {
     document.addEventListener("mouseup", soltar);
   };
 
+  elemento.oncontextmenu = function(e) {
+    e.preventDefault();
+    elementoSeleccionado = elemento;
+    const menu = document.getElementById("menu-contextual");
+    menu.style.left = e.pageX + "px";
+    menu.style.top = e.pageY + "px";
+    menu.style.display = "block";
+  };
+
   elemento.onclick = function() {
     document.querySelectorAll(".elemento-editable").forEach(el => el.classList.remove("selected"));
     elemento.classList.add("selected");
   };
+}
+
+// Ocultar menú contextual al hacer clic fuera
+document.addEventListener("click", function(e) {
+  const menu = document.getElementById("menu-contextual");
+  if (menu) menu.style.display = "none";
+});
+
+// Funciones del menú contextual
+function eliminarElemento() {
+  if (elementoSeleccionado) elementoSeleccionado.remove();
+}
+
+function copiarElemento() {
+  if (!elementoSeleccionado) return;
+  const copia = elementoSeleccionado.cloneNode(true);
+  copia.style.left = parseInt(elementoSeleccionado.style.left) + 20 + "px";
+  copia.style.top = parseInt(elementoSeleccionado.style.top) + 20 + "px";
+  hacerMovible(copia);
+  document.getElementById("zona-trabajo").appendChild(copia);
+}
+
+function guardarComo() {
+  if (!elementoSeleccionado) return;
+  const img = elementoSeleccionado.querySelector("img");
+  if (!img) return;
+  const a = document.createElement("a");
+  a.href = img.src;
+  a.download = "imagen.png";
+  a.click();
+}
+
+function buscarEnGoogle() {
+  if (!elementoSeleccionado) return;
+  const img = elementoSeleccionado.querySelector("img");
+  if (!img) return;
+  const url = "https://www.google.com/searchbyimage?image_url=" + encodeURIComponent(img.src);
+  window.open(url, "_blank");
+}
+
+// Publicar historia (como en panel.js)
+function mostrarModal() {
+  document.getElementById("modalPublicar").style.display = "flex";
+}
+
+function cerrarModal() {
+  document.getElementById("modalPublicar").style.display = "none";
+}
+
+function confirmarPublicacion() {
+  const titulo = document.getElementById("titulo").value.trim();
+  const descripcion = document.getElementById("descripcion").value.trim();
+  const categoria = document.getElementById("categoria").value;
+  const portadaFile = document.getElementById("portada").files[0];
+
+  if (!titulo || !descripcion || !portadaFile) {
+    alert("Por favor completa todos los campos, incluyendo la portada.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const historias = JSON.parse(localStorage.getItem("historiasPublicadas")) || [];
+    historias.push({
+      titulo,
+      descripcion,
+      categoria,
+      portada: e.target.result
+    });
+    localStorage.setItem("historiasPublicadas", JSON.stringify(historias));
+    alert("Historia publicada con éxito.");
+    cerrarModal();
+  };
+  reader.readAsDataURL(portadaFile);
 }
