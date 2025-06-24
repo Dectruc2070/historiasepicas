@@ -1,25 +1,17 @@
 
 function mostrarLogin() {
-    document.getElementById("login-panel").classList.toggle("login-hidden");
+  document.getElementById("loginForm").style.display = "block";
 }
 
-function verificarAcceso() {
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const password = document.getElementById("password").value.trim();
-    const pokemon = document.getElementById("pokemon").value.trim().toLowerCase();
+function verificar() {
+  const correo = document.getElementById("correo").value.trim();
+  const clave = document.getElementById("clave").value.trim();
+  const extra = document.getElementById("extra").value.trim().toLowerCase();
+  const msg = document.getElementById("mensaje");
 
-    const errorMsg = document.getElementById("error-msg");
-    const frases = [
-        "¿Eres tú o eres un desconocido?",
-        "No me andes con rodeos.",
-        "No te reconozco, intenta otra vez.",
-        "Esto no es para cualquiera.",
-        "Si no sabes quién es Mewtwo, lárgate."
-    ];
-
-    if (email === "francisromerovaldez@gmail.com" && password === "xp95" && pokemon === "mewtwo") {
-        window.location.href = "panel.html";
-    } else {
-        errorMsg.textContent = frases[Math.floor(Math.random() * frases.length)];
-    }
+  if (correo === "francisromerovaldez@gmail.com" && clave === "xp95" && extra === "mewtwo") {
+    window.location.href = "panel.html";
+  } else {
+    msg.innerText = "¿Eres tú o eres un desconocido? No me andes con rodeos.";
+  }
 }

@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio</title>
+  <link rel="stylesheet" href="login.css">
+  <script defer src="login.js"></script>
+</head>
+<body>
+  <div class="inicio">
+    <h1>Bienvenido a Historias Épicas</h1>
+    <div class="opciones">
+      <a href="historia.html">🌍 Leer Plantsworld</a>
+      <a href="crear.html">✍ Crear Historia</a>
+      <button onclick="mostrarLogin()">🛡 Panel Privado</button>
+    </div>
+  </div>
+
+  <div class="login" id="loginForm">
+    <h2>Acceso Privado</h2>
+    <input type="email" id="correo" placeholder="Correo electrónico">
+    <input type="password" id="clave" placeholder="Contraseña">
+    <input type="text" id="extra" placeholder="¿Pokémon favorito?">
+    <button onclick="verificar()">Entrar</button>
+    <p id="mensaje" style="color:red; font-weight:bold;"></p>
+  </div>
+</body>
+</html>
