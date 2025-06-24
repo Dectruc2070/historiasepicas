@@ -38,50 +38,60 @@ function abrirArchivo(event) {
   reader.readAsText(file);
 }
 
-function insertarURL() {
-  const url = prompt("Pega aquí la URL de la imagen, audio o video:");
-  if (!url) return;
+function insertar(tipo) {
+  const input = document.createElement("input");
+  input.type = "file";
+  if (tipo === "imagen") input.accept = "image/*";
+  if (tipo === "audio") input.accept = "audio/*";
+  if (tipo === "video") input.accept = "video/*";
 
-  let tipo = "";
-  if (url.match(/\.(jpeg|jpg|png|gif)$/)) tipo = "imagen";
-  else if (url.match(/\.(mp3|wav)$/)) tipo = "audio";
-  else if (url.match(/\.(mp4|webm)$/)) tipo = "video";
-  else {
-    alert("URL no reconocida. Usa una imagen, audio o video válido.");
-    return;
-  }
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      let html = "";
+      if (tipo === "imagen") html = `<img src="${ev.target.result}" style="max-width:200px;">`;
+      if (tipo === "audio") html = `<audio controls src="${ev.target.result}"></audio>`;
+      if (tipo === "video") html = `<video controls src="${ev.target.result}" style="width:200px;"></video>`;
+      if (tipo === "figura") html = '<div style="width:80px; height:80px; background:yellow; color:black; text-align:center; line-height:80px;">▲</div>';
 
-  let html = "";
-  if (tipo === "imagen") html = `<img src="${url}" style="max-width:200px;">`;
-  if (tipo === "audio") html = `<audio controls src="${url}"></audio>`;
-  if (tipo === "video") html = `<video controls src="${url}" style="width:200px;"></video>`;
+      const contenedor = document.createElement("div");
+      contenedor.className = "elemento-editable";
+      contenedor.innerHTML = tipo === "figura" ? html : html;
+      contenedor.contentEditable = false;
+      contenedor.style.left = "80px";
+      contenedor.style.top = "300px";
 
-  const contenedor = document.createElement("div");
-  contenedor.className = "elemento-editable";
-  contenedor.innerHTML = html;
-  contenedor.contentEditable = false;
-  contenedor.style.left = "80px";
-  contenedor.style.top = "300px";
+      contenedor.onmousedown = function(e) {
+        contenedor.classList.add("selected");
+        let shiftX = e.clientX - contenedor.getBoundingClientRect().left;
+        let shiftY = e.clientY - contenedor.getBoundingClientRect().top;
 
-  contenedor.onmousedown = function(e) {
-    contenedor.classList.add("selected");
-    let shiftX = e.clientX - contenedor.getBoundingClientRect().left;
-    let shiftY = e.clientY - contenedor.getBoundingClientRect().top;
+        function mover(ev) {
+          contenedor.style.left = ev.pageX - shiftX + "px";
+          contenedor.style.top = ev.pageY - shiftY + "px";
+        }
 
-    function mover(ev) {
-      contenedor.style.left = ev.pageX - shiftX + "px";
-      contenedor.style.top = ev.pageY - shiftY + "px";
+        function soltar() {
+          document.removeEventListener("mousemove", mover);
+          document.removeEventListener("mouseup", soltar);
+        }
+
+        document.addEventListener("mousemove", mover);
+        document.addEventListener("mouseup", soltar);
+      };
+
+      document.querySelectorAll(".elemento-editable").forEach(el => el.classList.remove("selected"));
+      document.getElementById("zona-trabajo").appendChild(contenedor);
+    };
+
+    if (tipo === "figura") {
+      input.remove();
+      const fakeFile = { result: "" };
+      reader.onload({ target: fakeFile });
+    } else {
+      reader.readAsDataURL(file);
     }
-
-    function soltar() {
-      document.removeEventListener("mousemove", mover);
-      document.removeEventListener("mouseup", soltar);
-    }
-
-    document.addEventListener("mousemove", mover);
-    document.addEventListener("mouseup", soltar);
   };
-
-  document.querySelectorAll(".elemento-editable").forEach(el => el.classList.remove("selected"));
-  document.getElementById("zona-trabajo").appendChild(contenedor);
+  input.click();
 }
