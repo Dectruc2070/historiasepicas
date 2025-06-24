@@ -50,48 +50,70 @@ function insertar(tipo) {
     const reader = new FileReader();
     reader.onload = function(ev) {
       let html = "";
-      if (tipo === "imagen") html = `<img src="${ev.target.result}" style="max-width:200px;">`;
+      if (tipo === "imagen") html = `<img src="${ev.target.result}" style="max-width:200px;" title="Imagen insertada">`;
       if (tipo === "audio") html = `<audio controls src="${ev.target.result}"></audio>`;
       if (tipo === "video") html = `<video controls src="${ev.target.result}" style="width:200px;"></video>`;
-      if (tipo === "figura") html = '<div style="width:80px; height:80px; background:yellow; color:black; text-align:center; line-height:80px;">▲</div>';
 
       const contenedor = document.createElement("div");
       contenedor.className = "elemento-editable";
-      contenedor.innerHTML = tipo === "figura" ? html : html;
+      contenedor.innerHTML = html;
       contenedor.contentEditable = false;
       contenedor.style.left = "80px";
       contenedor.style.top = "300px";
 
-      contenedor.onmousedown = function(e) {
-        contenedor.classList.add("selected");
-        let shiftX = e.clientX - contenedor.getBoundingClientRect().left;
-        let shiftY = e.clientY - contenedor.getBoundingClientRect().top;
-
-        function mover(ev) {
-          contenedor.style.left = ev.pageX - shiftX + "px";
-          contenedor.style.top = ev.pageY - shiftY + "px";
-        }
-
-        function soltar() {
-          document.removeEventListener("mousemove", mover);
-          document.removeEventListener("mouseup", soltar);
-        }
-
-        document.addEventListener("mousemove", mover);
-        document.addEventListener("mouseup", soltar);
-      };
-
-      document.querySelectorAll(".elemento-editable").forEach(el => el.classList.remove("selected"));
+      hacerMovible(contenedor);
       document.getElementById("zona-trabajo").appendChild(contenedor);
     };
 
     if (tipo === "figura") {
-      input.remove();
-      const fakeFile = { result: "" };
-      reader.onload({ target: fakeFile });
+      // Crear óvalo con texto editable
+      const ovalo = document.createElement("div");
+      ovalo.className = "elemento-editable";
+      ovalo.contentEditable = true;
+      ovalo.innerText = "Texto en óvalo";
+      ovalo.style.left = "100px";
+      ovalo.style.top = "300px";
+      ovalo.style.width = "200px";
+      ovalo.style.height = "100px";
+      ovalo.style.background = "white";
+      ovalo.style.color = "black";
+      ovalo.style.border = "2px solid #888";
+      ovalo.style.borderRadius = "50%";
+      ovalo.style.textAlign = "center";
+      ovalo.style.lineHeight = "100px";
+      ovalo.style.fontWeight = "bold";
+      hacerMovible(ovalo);
+      document.getElementById("zona-trabajo").appendChild(ovalo);
     } else {
       reader.readAsDataURL(file);
     }
   };
+
   input.click();
+}
+
+function hacerMovible(elemento) {
+  elemento.onmousedown = function(e) {
+    elemento.classList.add("selected");
+    let shiftX = e.clientX - elemento.getBoundingClientRect().left;
+    let shiftY = e.clientY - elemento.getBoundingClientRect().top;
+
+    function mover(ev) {
+      elemento.style.left = ev.pageX - shiftX + "px";
+      elemento.style.top = ev.pageY - shiftY + "px";
+    }
+
+    function soltar() {
+      document.removeEventListener("mousemove", mover);
+      document.removeEventListener("mouseup", soltar);
+    }
+
+    document.addEventListener("mousemove", mover);
+    document.addEventListener("mouseup", soltar);
+  };
+
+  elemento.onclick = function() {
+    document.querySelectorAll(".elemento-editable").forEach(el => el.classList.remove("selected"));
+    elemento.classList.add("selected");
+  };
 }
