@@ -1,63 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Editor con Estructura Unificada</title>
+  <meta charset="utf-8" />
+  <title>Crear / Editor — Historias Épicas</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="editor.js"></script>
-  <script defer>
+  <script>
+    // Al cargar la página, si hay texto temporal (subido desde panel), lo colocamos
     window.addEventListener("DOMContentLoaded", () => {
       const texto = localStorage.getItem("historiaTemporal");
       if (texto) {
-        document.getElementById("zona").innerText = texto;
+        const zona = document.getElementById("zona");
+        zona.innerText = texto;
         localStorage.removeItem("historiaTemporal");
       }
+      // Ajustar padding-top según altura de toolbar (por si cambia)
+      const tb = document.querySelector('.toolbar');
+      if (tb) document.body.style.paddingTop = tb.offsetHeight + 'px';
     });
   </script>
-  <style>
-    .zona-unificada {
-      display: flex;
-      flex-direction: row;
-      background-color: black;
-    }
-    .columna {
-      width: 15%;
-      min-height: 100vh;
-      background-color: black;
-      padding: 1rem;
-      color: white;
-    }
-    .zona-texto {
-      width: 70%;
-      background-color: #f5f5f5;
-      min-height: 100vh;
-      padding: 2rem;
-      overflow-y: auto;
-      color: black;
-      outline: none;
-    }
-    .separador {
-      width: 1px;
-      background-color: gray;
-    }
-  </style>
 </head>
 <body>
-  <div class="toolbar">
+  <!-- Barra de herramientas (fija) -->
+  <div class="toolbar" role="toolbar" aria-label="Barra de herramientas">
     <select id="fuente" onchange="cambiarFuente()">
-      <option value="Calibri">Calibri</option>
-      <option value="Times New Roman">Times New Roman</option>
-      <option value="Arial">Arial</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Comic Sans MS">Comic Sans MS</option>
-      <option value="Courier New">Courier New</option>
-      <option value="Trebuchet MS">Trebuchet MS</option>
+      <option>Calibri</option>
+      <option>Times New Roman</option>
+      <option>Arial</option>
+      <option>Verdana</option>
+      <option>Georgia</option>
+      <option>"Comic Sans MS"</option>
+      <option>"Courier New"</option>
+      <option>"Trebuchet MS"</option>
     </select>
+
     <select id="tamano" onchange="cambiarTamano()">
       <option value="11px">11px</option>
       <option value="12px">12px</option>
-      <option value="14px">14px</option>
+      <option value="14px" selected>14px</option>
       <option value="16px">16px</option>
       <option value="18px">18px</option>
       <option value="20px">20px</option>
@@ -65,31 +45,38 @@
       <option value="28px">28px</option>
       <option value="32px">32px</option>
     </select>
-    <button onclick="formato('bold')">Negrita</button>
-    <button onclick="formato('italic')">Cursiva</button>
-    <button onclick="formato('underline')">Subrayado</button>
-    <input type="color" id="color" onchange="cambiarColor()">
-    <input type="file" accept=".txt" onchange="abrirArchivo(event)">
-    <button onclick="insertar('figura')">Insertar Figura</button>
-    <button onclick="insertar('imagen')">Insertar Imagen</button>
-    <button onclick="insertar('audio')">Insertar Audio</button>
-    <button onclick="insertar('video')">Insertar Video</button>
-    <button onclick="mostrarModal()">📤 Publicar historia</button>
+
+    <button onclick="formato('bold')" title="Negrita">B</button>
+    <button onclick="formato('italic')" title="Cursiva">I</button>
+    <button onclick="formato('underline')" title="Subrayado">U</button>
+
+    <input type="color" id="color" onchange="cambiarColor()" title="Color de texto">
+
+    <input type="file" accept=".txt" onchange="abrirArchivo(event)" title="Abrir .txt">
+
+    <button onclick="insertar('figura')">Insertar figura</button>
+    <button onclick="insertar('imagen')">Insertar imagen</button>
+    <button onclick="insertar('audio')">Insertar audio</button>
+    <button onclick="insertar('video')">Insertar video</button>
+
+    <button onclick="mostrarModal()" class="publicar-btn">📤 Publicar</button>
   </div>
 
-  <div class="zona-unificada">
-    <div class="columna izquierda" contenteditable="true"></div>
+  <!-- Zona unificada: izquierda (columna negra), centro (zona blanca), derecha (columna negra) -->
+  <div class="zona-unificada" id="zona-trabajo">
+    <div class="columna izquierda" contenteditable="true" data-area="izq"></div>
     <div class="separador"></div>
     <div class="zona-texto" id="zona" contenteditable="true">Escribe aquí tu historia...</div>
     <div class="separador"></div>
-    <div class="columna derecha" contenteditable="true"></div>
+    <div class="columna derecha" contenteditable="true" data-area="der"></div>
   </div>
 
-  <div class="modal" id="modalPublicar">
+  <!-- Modal publicar (reutiliza la misma estructura que panel) -->
+  <div class="modal" id="modalPublicar" aria-hidden="true">
     <div class="modal-contenido">
       <h2>Publicar historia</h2>
       <label>Título:</label>
-      <input type="text" id="titulo">
+      <input id="titulo" type="text" />
       <label>Descripción:</label>
       <textarea id="descripcion"></textarea>
       <label>Categoría:</label>
@@ -98,10 +85,13 @@
         <option value="fantasía">Fantasía</option>
         <option value="historia">Historia</option>
       </select>
-      <br><br>
-      <label>📎 Subir portada:</label>
+
+      <label>📎 Subir archivo de texto (.txt)</label>
+      <input type="file" id="archivoTexto" accept=".txt" onchange="cargarTextoArchivo(this)">
+
+      <label>🖼 Portada (imagen)</label>
       <input type="file" id="portada" accept="image/*">
-      <br><br>
+
       <div class="botones">
         <button onclick="confirmarPublicacion()">✅ Publicar</button>
         <button onclick="cerrarModal()">❌ Cancelar</button>
@@ -109,7 +99,8 @@
     </div>
   </div>
 
-  <ul id="menu-contextual" style="display:none; position:absolute; background:white; color:black; border:1px solid gray; z-index:9999; list-style:none; padding:10px; border-radius:5px; font-size:14px;">
+  <!-- Menú contextual -->
+  <ul id="menu-contextual" class="menu-contextual" style="display:none;">
     <li onclick="eliminarElemento()">🗑 Eliminar</li>
     <li onclick="copiarElemento()">📋 Copiar</li>
     <li onclick="guardarComo()">💾 Guardar imagen como</li>
