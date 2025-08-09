@@ -1,84 +1,143 @@
-
-body {
-  margin: 0;
-  font-family: Calibri, sans-serif;
-  background-color: #f0f0f0;
+/* style.css — editor (reemplaza el tuyo) */
+:root{
+  --toolbar-bg:#222;
+  --columna-bg: #000;
+  --zona-bg: #ffffff;
+  --text-color: #000;
 }
 
-.toolbar {
+/* cuerpo y toolbar fija (como Word) */
+body{
+  margin:0;
+  font-family: Calibri, Arial, sans-serif;
+  background:#1a1a1a;
+  color:white;
+  /* padding-top será ajustado en JS al tamaño real del toolbar */
+}
+
+.toolbar{
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background-color: #222;
+  background: var(--toolbar-bg);
   color: white;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 10px;
+  gap: 8px;
+  padding: 8px 10px;
   z-index: 1000;
-  font-family: Arial, sans-serif;
+  overflow-x: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
-.toolbar select,
-.toolbar button,
-.toolbar input[type="color"],
-.toolbar input[type="file"] {
-  font-size: 14px;
-  padding: 4px;
+.toolbar select, .toolbar button, .toolbar input[type="color"], .toolbar input[type="file"]{
+  background:#333;
+  color:white;
+  border:1px solid #444;
+  padding:6px;
+  border-radius:4px;
+  font-size:14px;
 }
 
-.contenedor-editor {
-  display: flex;
-  margin-top: 70px;
-  min-height: 100vh;
+.publicar-btn{
+  background:#0078d7;
+  border:none;
+  color:white;
 }
 
-.columna {
-  width: 15%;
-  background-color: black;
-  color: white;
-  padding: 1rem;
+/* Zona unificada — columnas negras y zona blanca en el centro */
+.zona-unificada{
+  display:flex;
+  flex-direction:row;
+  margin-top: 70px; /* suficiente espacio para la toolbar; JS ajusta si cambia */
+  min-height: calc(100vh - 70px);
 }
 
-.separador {
-  width: 1px;
-  background-color: gray;
+/* columnas laterales */
+.columna{
+  width:20%;
+  background: var(--columna-bg);
+  min-height:100%;
+  padding:18px;
+  box-sizing:border-box;
+  color:white;
+  overflow:auto;
 }
 
-.zona-texto {
-  width: 68%;
-  background-color: #f5f5f5;
-  padding: 2rem;
-  overflow-y: auto;
-  min-height: 100vh;
-  color: black;
-  font-size: 16px;
-  outline: none;
+/* separador entre columnas */
+.separador{
+  width:2px;
+  background: #444;
 }
 
-.modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
+/* zona de texto central */
+.zona-texto{
+  flex:1;
+  background: var(--zona-bg);
+  color: var(--text-color);
+  padding: 24px;
+  box-sizing: border-box;
+  min-height:100vh;
+  position: relative; /* los elementos absolute se posicionan respecto a esta área */
+  overflow:auto;
 }
 
-.modal-contenido {
+/* elementos insertados (móviles) */
+.elemento-editable{
+  position:absolute;
+  border:2px dashed transparent;
   background: white;
-  padding: 20px;
-  width: 400px;
-  border-radius: 8px;
-  color: black;
+  padding:6px;
+  resize: both;
+  overflow:auto;
+  z-index: 20;
 }
 
-.modal-contenido input,
-.modal-contenido textarea,
-.modal-contenido select {
-  width: 100%;
-  margin: 4px 0 10px;
-  padding: 6px;
-  font-size: 14px;
+/* seleccionado */
+.elemento-editable.selected{
+  border-color: #0078d7;
+}
+
+/* modal publicar */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.65);
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+}
+.modal .modal-contenido{
+  background:white;
+  color:black;
+  width:360px;
+  padding:18px;
+  border-radius:8px;
+}
+.modal input, .modal textarea, .modal select{
+  width:100%;
+  margin:6px 0 12px;
+  padding:8px;
+  box-sizing:border-box;
+}
+
+/* menú contextual */
+.menu-contextual{
+  position:absolute;
+  list-style:none;
+  background:white;
+  color:#000;
+  border:1px solid #ccc;
+  padding:8px;
+  border-radius:6px;
+  z-index:9999;
+}
+.menu-contextual li{
+  padding:6px 10px;
+  cursor:pointer;
+}
+.menu-contextual li:hover{
+  background:#f0f0f0;
 }
