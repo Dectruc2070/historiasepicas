@@ -1,67 +1,44 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Historias Épicas</title>
-  <link rel="stylesheet" href="login.css">
-  <script defer src="login.js"></script>
-</head>
-<body>
-  <div class="inicio">
-    <h1>Bienvenido a Historias Épicas</h1>
-    <div class="opciones">
-      <button disabled>ℹ️ Información</button>
-      <button disabled>🧑‍💻 Creador de la página</button>
-      <button onclick="mostrarLogin()">🛡 Panel Privado</button>
-    </div>
-  </div>
+<div id="historiasPublicadas" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px;"></div>
 
-  <div class="historias-publicadas">
-    <h2>📚 Historias Publicadas</h2>
-    <div id="listaHistorias"></div>
-  </div>
+<script>
+// Función para mostrar historias en la página principal
+function mostrarHistoriasPublicadas() {
+    const contenedor = document.getElementById("historiasPublicadas");
+    contenedor.innerHTML = "";
 
-  <div class="login" id="loginForm">
-    <h2>Acceso Privado</h2>
-    <input type="email" id="correo" placeholder="Correo electrónico">
-    <input type="password" id="clave" placeholder="Contraseña">
-    <input type="text" id="extra" placeholder="¿Pokémon favorito?">
-    <button onclick="verificar()">Ingresar</button>
-    <p id="mensaje" style="color:red; font-weight:bold;"></p>
-  </div>
+    let historias = JSON.parse(localStorage.getItem("historias")) || [];
 
-  <script>
-    function mostrarHistorias() {
-      const lista = document.getElementById("listaHistorias");
-      lista.innerHTML = "";
-      const historias = JSON.parse(localStorage.getItem("historiasPublicadas")) || [];
-      historias.forEach((h, index) => {
+    historias.forEach(historia => {
         const tarjeta = document.createElement("div");
-        tarjeta.style.background = "#fff";
-        tarjeta.style.color = "#000";
         tarjeta.style.border = "1px solid #ccc";
-        tarjeta.style.margin = "1rem";
-        tarjeta.style.padding = "1rem";
         tarjeta.style.borderRadius = "8px";
-        tarjeta.innerHTML = \`
-          <img src="\${h.portada}" style="max-width:100%; border-radius:8px;">
-          <h3>\${h.titulo}</h3>
-          <p><strong>Categoría:</strong> \${h.categoria}</p>
-          <p>\${h.descripcion}</p>
-          <button onclick="eliminarHistoria(\${index})" style="margin-top:10px;">🗑 Eliminar</button>
-        \`;
-        lista.appendChild(tarjeta);
-      });
-    }
+        tarjeta.style.width = "200px";
+        tarjeta.style.overflow = "hidden";
+        tarjeta.style.background = "#fff";
+        tarjeta.style.cursor = "pointer";
+        tarjeta.onclick = () => {
+            window.location.href = historia.url || "#";
+        };
 
-    function eliminarHistoria(i) {
-      const historias = JSON.parse(localStorage.getItem("historiasPublicadas")) || [];
-      historias.splice(i, 1);
-      localStorage.setItem("historiasPublicadas", JSON.stringify(historias));
-      mostrarHistorias();
-    }
+        if (historia.portada) {
+            const img = document.createElement("img");
+            img.src = historia.portada;
+            img.style.width = "100%";
+            img.style.height = "150px";
+            img.style.objectFit = "cover";
+            tarjeta.appendChild(img);
+        }
 
-    mostrarHistorias();
-  </script>
-</body>
-</html>
+        const titulo = document.createElement("div");
+        titulo.textContent = historia.titulo || "Sin título";
+        titulo.style.padding = "10px";
+        titulo.style.fontWeight = "bold";
+        tarjeta.appendChild(titulo);
+
+        contenedor.appendChild(tarjeta);
+    });
+}
+
+// Cargar historias al abrir
+document.addEventListener("DOMContentLoaded", mostrarHistoriasPublicadas);
+</script>
