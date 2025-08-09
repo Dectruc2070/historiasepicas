@@ -1,3 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Privado</title>
+  <link rel="stylesheet" href="panel.css">
+  <script defer src="panel.js"></script>
+</head>
+<body>
+  <div class="panel">
+    <h1>Bienvenido al Panel Privado</h1>
+    <div class="opciones">
+      <a href="crear.html">✍ Crear historia</a>
+      <button onclick="mostrarModal()">📤 Publicar historia</button>
+      <button disabled>🎨 Personalizar página (próximamente)</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modalPublicar">
+    <div class="modal-contenido">
+      <h2>Publicar historia</h2>
+      <label>Título:</label>
+      <input type="text" id="titulo">
+      <label>Descripción:</label>
+      <textarea id="descripcion"></textarea>
+      <label>Categoría:</label>
+      <select id="categoria">
+        <option value="aventura">Aventura</option>
+        <option value="fantasía">Fantasía</option>
+        <option value="historia">Historia</option>
+      </select>
+      <br><br>
+      <label>📄 Subir archivo de texto (.txt):</label>
+      <input type="file" onchange="cargarTextoArchivo(this)" accept=".txt">
+      <br><br>
+      <label>🖼️ Portada de la historia:</label>
+      <input type="file" id="portada" accept="image/*">
+      <br><br>
+      <a href="crear.html" style="display:inline-block;margin-bottom:1rem;color:#0078d7;">¿Quieres editar tu historia?</a>
+      <div class="botones">
+        <button onclick="confirmarPublicacion()">✅ Publicar</button>
+        <button onclick="cerrarModal()">❌ Cancelar</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
 <h2 style="margin-top: 30px;">Historias Publicadas</h2>
 <div id="historiasPublicadasPanel" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px;"></div>
 
