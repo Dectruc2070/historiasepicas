@@ -106,5 +106,11 @@
     <li onclick="guardarComo()">💾 Guardar imagen como</li>
     <li onclick="buscarEnGoogle()">🔎 Buscar en Google</li>
   </ul>
+  function publicarHistoria(titulo, portadaBase64, urlHistoria) {
+    let historias = JSON.parse(localStorage.getItem("historias")) || [];
+    historias.push({ titulo: titulo, portada: portadaBase64, url: urlHistoria });
+    localStorage.setItem("historias", JSON.stringify(historias));
+}
+
 </body>
 </html>
